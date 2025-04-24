@@ -20,15 +20,18 @@ Automatic USB reset and monitoring tools for CyberPower UPS devices when status 
 usb-ups-reset/
 ├── .github/
 │   ├── workflows/
-│   │   └── ups-toolkit-ci.yml
+│   │   ├── ups-toolkit-ci.yml        
+│   │   └── deploy-ghcr-k8s.yml      
+ Kubernetes
 │   ├── ISSUE_TEMPLATE.md
 │   ├── PULL_REQUEST_TEMPLATE.md
 │   └── CONTRIBUTING.md
 ├── README.md
 ├── LICENSE
-├── .gitignore
 ├── Dockerfile
 ├── docker-compose.yml
+├── k8s/
+│   └── deployment.yaml
 ├── common/
 │   ├── detect_usb_id.sh
 │   ├── check_ups_nut.sh
@@ -42,8 +45,6 @@ usb-ups-reset/
 │   └── ups_reset_cron_generic.sh
 ├── crontab_examples/
 │   └── crontab_entry.md
-└── k8s/
-    └── deployment.yaml
 ```
 
 ## 📦 Installation
@@ -53,10 +54,24 @@ cd Usb-Ups-Reset-Repo
 chmod +x */*.sh
 ```
 
-## 🐳 Docker Deployment
-### Dockerfile
+## 🔁 Cronjob Example
+Add to crontab (`crontab -e`):
+```bash
+*/10 * * * * /path/to/usb-ups-reset/qnap/ups_reset_cron_qnap.sh
 ```
-FROM debian:bullseye
+
+## ✅ Requirements
+- BusyBox or bash shell
+- Write permission to log directory
+- Optional: `net-snmp`, `nut-client`, `jq`, `curl`
+
+## 📊 UPS Status Detection
+- **NUT example:** `common/check_ups_nut.sh`
+- **SNMP example:** `common/check_ups_snmp.sh`
+
+## 📣 Slack Webhook Integration
+- `common/notify_slack.sh` allows sending alerts to Slack.
+- Requires valid webhook URL and `jq` installed.
 
 RUN apt update && apt install -y usbutils curl jq bash
 
@@ -135,6 +150,22 @@ kubectl apply -f k8s/deployment.yaml
     echo "SLACK_WEBHOOK=$SLACK_WEBHOOK" >> $GITHUB_ENV
 ```
 
+This setup is now fully CI/CD-capable for Docker, Kubernetes, and enterprise secret management via Google Cloud!
+
+## 🧪 Testing
+- Test USB detection
+- Simulate reset conditions in Docker
+
+## 🛠️ GitHub Actions
+- See `.github/workflows/ups-toolkit-ci.yml ` for automated test runs on commits and PRs
+`.github/workflows/deploy-ghcr-k8s.yml` for  CI/CD deployment to GHCR and Kubernetes
+
+## 🤝 Contributing
+Please read [`CONTRIBUTING.md`](.github/CONTRIBUTING.md) for how to help out!
+
+## 📝 License
+Licensed under the [MIT License](LICENSE)
+
 ---
 
-This setup is now fully CI/CD-capable for Docker, Kubernetes, and enterprise secret management via Google Cloud!
+For contributions, bug reports or suggestions, please open an issue or pull request on GitHub.
