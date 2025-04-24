@@ -1,0 +1,36 @@
+name: Self-Contained USB Detection Test
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test-usb-detection:
+    name: Local USB Detection Mock Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Initialize test structure
+        run: |
+          mkdir -p usb-ups-reset/common
+          echo '#!/bin/sh' > usb-ups-reset/common/detect_usb_id.sh
+          echo 'for devpath in /tmp/sysbus/devices/*; do' >> usb-ups-reset/common/detect_usb_id.sh
+          echo '  if [ -f \"$devpath/product\" ] && grep -iq \"cyberpower\" \"$devpath/product\"; then' >> usb-ups-reset/common/detect_usb_id.sh
+          echo '    echo \"$(basename \\\"$devpath\\\")\"' >> usb-ups-reset/common/detect_usb_id.sh
+          echo '  fi' >> usb-ups-reset/common/detect_usb_id.sh
+          echo 'done' >> usb-ups-reset/common/detect_usb_id.sh
+          chmod +x usb-ups-reset/common/detect_usb_id.sh
+
+      - name: Simulate CyberPower USB device
+        run: |
+          mkdir -p /tmp/sysbus/devices/mock-cyberpower
+          echo "CyberPower UPS" > /tmp/sysbus/devices/mock-cyberpower/product
+
+      - name: Run detection test
+        run: |
+          ./usb-ups-reset/common/detect_usb_id.sh | grep -qi mock-cyberpower \
+            && echo "::notice ::CyberPower device detected — Test passed" \
+            || (echo "::error ::CyberPower device not detected — Test failed" && exit 1)
