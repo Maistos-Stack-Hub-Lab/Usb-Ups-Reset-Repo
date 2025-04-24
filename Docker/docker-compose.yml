@@ -1,0 +1,11 @@
+version: '3'
+services:
+  ups-reset-sim:
+    build: .
+    container_name: ups_reset_env
+    volumes:
+      - ./logs:/var/log
+    tty: true
+#run with 
+#docker-compose build
+#docker-compose up -d
