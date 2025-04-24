@@ -1,16 +1,14 @@
 #!/bin/bash
 
 WEBHOOK_URL="https://hooks.slack.com/services/your/webhook/url"
+HOST=$(hostname)
+TIME=$(date)
 MESSAGE="$1"
 
-if [ -z "$MESSAGE" ]; then
-  echo "No message provided." >&2
-  exit 1
-fi
+[ -z "$MESSAGE" ] && MESSAGE="⚠️ Unknown anomaly detected"
 
-PAYLOAD=$(jq -n --arg text "$MESSAGE" '{"text":$text}')
+PAYLOAD=$(jq -n --arg text "*UPS Alert*\nHost: $HOST\nTime: $TIME\nMessage: $MESSAGE" '{"text":$text}')
 
-curl -s -X POST -H "Content-type: application/json" --data "$PAYLOAD" "$WEBHOOK_URL" \
-  || echo "[$(date)] Slack webhook failed." >> /var/log/usb_reset.log
+curl -s -X POST -H "Content-type: application/json" --data "$PAYLOAD" "$WEBHOOK_URL"
 
 #Install jq via apt install jq if needed.

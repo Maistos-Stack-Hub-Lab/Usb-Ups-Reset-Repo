@@ -1,4 +1,4 @@
-name: Run UPS Scripts Test
+name: Test USB Detection and Slack Integration
 
 on:
   push:
@@ -7,14 +7,24 @@ on:
     branches: [main]
 
 jobs:
-  build:
+  usb-detection-test:
+    name: Simulate CyberPower USB Detection
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Run USB detection script
+      - name: Setup mock USB directory
+        run: |
+          mkdir -p /tmp/sysbus/devices/mock-cyberpower
+          echo "CyberPower UPS" > /tmp/sysbus/devices/mock-cyberpower/product
+
+      - name: Modify detection script to use mock path
+        run: |
+          sed -i 's/\/sys\/bus\/usb/\/tmp\/sysbus/' common/detect_usb_id.sh
+
+      - name: Run detection script
         run: |
           chmod +x common/detect_usb_id.sh
-          ./common/detect_usb_id.sh || echo "No USB found or test-only output"
+          ./common/detect_usb_id.sh | grep -qi cyberpower && echo "PASS" || (echo "FAIL"; exit 1)
