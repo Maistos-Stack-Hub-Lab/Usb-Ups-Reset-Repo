@@ -1,0 +1,80 @@
+name: Full UPS Test with Slack Alerts
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  usb-detection-test:
+    name: USB Detection Simulation
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Simulate CyberPower device
+        run: |
+          mkdir -p /tmp/sysbus/devices/mock-cyberpower
+          echo "CyberPower UPS" > /tmp/sysbus/devices/mock-cyberpower/product
+
+          -name: Simulate multiple CyberPower devices
+        run: |
+            mkdir -p /tmp/sysbus/devices/mock1
+            echo "CyberPower UPS 1" > /tmp/sysbus/devices/mock1/product
+  
+            mkdir -p /tmp/sysbus/devices/mock2
+            echo "CyberPower UPS 2" > /tmp/sysbus/devices/mock2/product
+  
+            mkdir -p /tmp/sysbus/devices/other
+            echo "Non-UPS Device" > /tmp/sysbus/devices/other/product
+  
+
+      - name: Run detection
+        run: |
+          echo '#!/bin/sh' > detect_usb.sh
+          echo 'for devpath in /tmp/sysbus/devices/*; do' >> detect_usb.sh
+          echo '  if [ -f "$devpath/product" ] && grep -iq "cyberpower" "$devpath/product"; then' >> detect_usb.sh
+          echo '    echo "$(basename "$devpath")"' >> detect_usb.sh
+          echo '  fi' >> detect_usb.sh
+          echo 'done' >> detect_usb.sh
+          chmod +x detect_usb.sh
+          ./detect_usb.sh | grep -q mock-cyberpower
+
+    deploy:
+        name: Deploy UPS Toolkit
+        runs-on: ubuntu-latest
+        needs: usb-detection-test
+        if: ${{ needs.usb-detection-test.result == 'success' }}
+
+        steps:
+        -name: Deploy script to production folder
+        run: |
+            echo "Deploying USB reset tools..."
+            # Simulate deploy logic
+            mkdir -p /tmp/deploy
+            echo "Deployed at $(date)" > /tmp/deploy/log.txt
+
+  notify-slack:
+    name: Notify Slack
+    runs-on: ubuntu-latest
+    needs: usb-detection-test
+    if: always()
+
+    steps:
+        - name: Send Slack notification
+         run: |
+          STATUS="${{ needs.usb-detection-test.result }}"
+          SHA="${{ github.sha }}"
+          JOB_URL="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+
+          if [[ "$STATUS" == "success" ]]; then
+            MSG="✅ *USB Detection Test Passed*"
+          else
+            MSG="❌ *USB Detection Test Failed*\nCommit: \`$SHA\`\nJob: $JOB_URL"
+          fi
+
+          curl -X POST -H 'Content-type: application/json' \
+            --data "{\"text\": \"$MSG\"}" \
+            "${{ secrets.SLACK_WEBHOOK_URL }}"
+
