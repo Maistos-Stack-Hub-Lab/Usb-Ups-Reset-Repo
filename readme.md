@@ -18,6 +18,12 @@ Automatic USB reset and monitoring tools for CyberPower UPS devices when status 
 ## 📁 Repository Structure
 ```
 usb-ups-reset/
+├── .github/
+│   ├── workflows/
+│   │   └── test.yml
+│   ├── ISSUE_TEMPLATE.md
+│   ├── PULL_REQUEST_TEMPLATE.md
+│   └── CONTRIBUTING.md
 ├── README.md
 ├── LICENSE
 ├── .gitignore
@@ -40,8 +46,8 @@ usb-ups-reset/
 
 ## 📦 Installation
 ```bash
-git clone https://github.com/yourname/usb-ups-reset.git
-cd usb-ups-reset
+git clone https://github.com/Maistos-Stack-Hub-Lab/Usb-Ups-Reset-Repo.git
+cd Usb-Ups-Reset-Repo
 chmod +x */*.sh
 ```
 
@@ -79,6 +85,12 @@ Useful for testing detection, logging, and scripting in isolation.
 ## 🖼️ Screenshots & Setup Examples
 - Setup screenshots in `/docs/screenshots/`
 - Embedded examples in documentation
+
+## 🛠️ GitHub Actions
+- See `.github/workflows/test.yml` for automated test runs on commits and PRs
+
+## 🤝 Contributing
+Please read [`CONTRIBUTING.md`](.github/CONTRIBUTING.md) for how to help out!
 
 ## 📝 License
 Licensed under the [MIT License](LICENSE)
