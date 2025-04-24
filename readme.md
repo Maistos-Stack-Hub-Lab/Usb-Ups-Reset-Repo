@@ -15,6 +15,25 @@ Automatic USB reset and monitoring tools for CyberPower UPS devices when status 
 - Supports logging to files and syslog
 - Can be run via scheduled cron jobs
 
+#### Scenario: QNAP NAS fails to detect CyberPower UPS
+
+**Problem**: After a firmware update, a QNAP NAS intermittently reports UPS as "Anomalous".
+
+**Solution**:
+1. Clone this repo to your NAS or shared folder.
+2. Make the detection script executable:
+```bash
+chmod +x common/detect_usb_id.sh
+```
+3. Add to crontab for every 10 minutes:
+```bash
+*/10 * * * * /path/to/common/detect_usb_id.sh >> /var/log/ups-check.log 2>&1
+```
+4. Optional: Configure Slack alerts using `notify_slack.sh`
+
+**Outcome**: UPS communication is automatically reset, preventing shutdown errors and improving uptime reliability.
+
+
 ## 📁 Repository Structure
 ```
 usb-ups-reset/
@@ -82,25 +101,13 @@ CMD ["bash"]
 ```
 
 ### docker-compose.yml
-```
-version: '3.9'
-
-services:
-  ups-toolkit:
-    build: .
-    container_name: ups_toolkit_local
-    volumes:
-      - ./logs:/app/logs
-    command: [ "bash", "-c", "./common/detect_usb_id.sh && sleep infinity" ]
-```
-
 Run locally:
 ```bash
 docker-compose up --build -d
 ```
 
 ## ☸️ Kubernetes Deployment (Example)
-File: `k8s/deployment.yaml`
+**To be created**: Save the following as `k8s/deployment.yaml`
 ```yaml
 apiVersion: apps/v1
 kind: Deployment

@@ -1,8 +1,17 @@
-# Contributing Guide
+Thanks for helping improve this project! Here's how to contribute:
 
-Thanks for considering a contribution! Please follow these guidelines:
+## Getting Started
+- Fork the repository
+- Clone your fork locally
+- Create a feature branch
 
-- Use feature branches.
-- Submit pull requests with clear titles and descriptions.
-- Use the existing folder structure.
-- Write logs, use `bash -x` or `set -e` for debugging.
+## Development
+- Make your changes with proper commit messages
+- Add tests or verify functionality
+
+## Submitting Changes
+- Push to your fork and submit a pull request
+- Fill out the pull request template
+- Link related issues
+
+Thank you for contributing!

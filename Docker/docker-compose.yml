@@ -1,11 +1,12 @@
-version: '3'
+version: '3.9'
+
 services:
-  ups-reset-sim:
+  ups-toolkit:
     build: .
-    container_name: ups_reset_env
+    container_name: ups_toolkit_local
     volumes:
-      - ./logs:/var/log
-    tty: true
+      - ./logs:/app/logs
+    command: [ "bash", "-c", "./common/detect_usb_id.sh && sleep infinity" ]
 #run with 
 #docker-compose build
 #docker-compose up -d

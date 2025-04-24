@@ -1,0 +1,25 @@
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ups-toolkit
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ups-toolkit
+  template:
+    metadata:
+      labels:
+        app: ups-toolkit
+    spec:
+      containers:
+      - name: ups-toolkit
+        image: ghcr.io/your-org/ups-toolkit:latest
+        volumeMounts:
+        - mountPath: "/app/logs"
+          name: logs
+        command: ["/bin/bash", "-c", "./common/detect_usb_id.sh && sleep infinity"]
+      volumes:
+      - name: logs
+        emptyDir: {}
