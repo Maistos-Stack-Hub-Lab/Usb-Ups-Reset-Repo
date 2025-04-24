@@ -20,13 +20,15 @@ Automatic USB reset and monitoring tools for CyberPower UPS devices when status 
 usb-ups-reset/
 ├── .github/
 │   ├── workflows/
-│   │   └── test.yml
+│   │   └── ups-toolkit-ci.yml
 │   ├── ISSUE_TEMPLATE.md
 │   ├── PULL_REQUEST_TEMPLATE.md
 │   └── CONTRIBUTING.md
 ├── README.md
 ├── LICENSE
 ├── .gitignore
+├── Dockerfile
+├── docker-compose.yml
 ├── common/
 │   ├── detect_usb_id.sh
 │   ├── check_ups_nut.sh
@@ -40,8 +42,8 @@ usb-ups-reset/
 │   └── ups_reset_cron_generic.sh
 ├── crontab_examples/
 │   └── crontab_entry.md
-├── Dockerfile
-└── docker-compose.yml
+└── k8s/
+    └── deployment.yaml
 ```
 
 ## 📦 Installation
@@ -51,50 +53,88 @@ cd Usb-Ups-Reset-Repo
 chmod +x */*.sh
 ```
 
-## 🔁 Cronjob Example
-Add to crontab (`crontab -e`):
-```bash
-*/10 * * * * /path/to/usb-ups-reset/qnap/ups_reset_cron_qnap.sh
+## 🐳 Docker Deployment
+### Dockerfile
+```
+FROM debian:bullseye
+
+RUN apt update && apt install -y usbutils curl jq bash
+
+COPY . /app
+WORKDIR /app
+
+CMD ["bash"]
 ```
 
-## ✅ Requirements
-- BusyBox or bash shell
-- Write permission to log directory
-- Optional: `net-snmp`, `nut-client`, `jq`, `curl`
-
-## 📊 UPS Status Detection
-- **NUT example:** `common/check_ups_nut.sh`
-- **SNMP example:** `common/check_ups_snmp.sh`
-
-## 📣 Slack Webhook Integration
-- `common/notify_slack.sh` allows sending alerts to Slack.
-- Requires valid webhook URL and `jq` installed.
-
-## 🐋 Docker Development Environment
-Build and run with Docker:
-```bash
-docker-compose build
-docker-compose up -d
+### docker-compose.yml
 ```
-Useful for testing detection, logging, and scripting in isolation.
+version: '3.9'
 
-## 🧪 Testing
-- Test USB detection: `bash test/test_detect.sh`
-- Simulate reset conditions in Docker
+services:
+  ups-toolkit:
+    build: .
+    container_name: ups_toolkit_local
+    volumes:
+      - ./logs:/app/logs
+    command: [ "bash", "-c", "./common/detect_usb_id.sh && sleep infinity" ]
+```
 
-## 🖼️ Screenshots & Setup Examples
-- Setup screenshots in `/docs/screenshots/`
-- Embedded examples in documentation
+Run locally:
+```bash
+docker-compose up --build -d
+```
 
-## 🛠️ GitHub Actions
-- See `.github/workflows/test.yml` for automated test runs on commits and PRs
+## ☸️ Kubernetes Deployment (Example)
+File: `k8s/deployment.yaml`
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ups-toolkit
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ups-toolkit
+  template:
+    metadata:
+      labels:
+        app: ups-toolkit
+    spec:
+      containers:
+      - name: ups-toolkit
+        image: ghcr.io/your-org/ups-toolkit:latest
+        volumeMounts:
+        - mountPath: "/app/logs"
+          name: logs
+        command: ["/bin/bash", "-c", "./common/detect_usb_id.sh && sleep infinity"]
+      volumes:
+      - name: logs
+        emptyDir: {}
+```
 
-## 🤝 Contributing
-Please read [`CONTRIBUTING.md`](.github/CONTRIBUTING.md) for how to help out!
+Apply with:
+```bash
+kubectl apply -f k8s/deployment.yaml
+```
 
-## 📝 License
-Licensed under the [MIT License](LICENSE)
+## 🔐 Securing CI with Google Cloud Secret Manager
+- Store your SSH keys or Slack webhooks securely
+- Use `google-github-actions/auth` + `gcloud secrets versions access`
+- Example step in workflow:
+```yaml
+- id: 'auth'
+  uses: 'google-github-actions/auth@v1'
+  with:
+    credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
+
+- name: Access secret
+  run: |
+    SLACK_WEBHOOK=$(gcloud secrets versions access latest --secret="slack-webhook-url")
+    echo "::add-mask::$SLACK_WEBHOOK"
+    echo "SLACK_WEBHOOK=$SLACK_WEBHOOK" >> $GITHUB_ENV
+```
 
 ---
 
-For contributions, bug reports or suggestions, please open an issue or pull request on GitHub.
+This setup is now fully CI/CD-capable for Docker, Kubernetes, and enterprise secret management via Google Cloud!

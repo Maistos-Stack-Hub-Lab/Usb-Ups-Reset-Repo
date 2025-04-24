@@ -1,0 +1,47 @@
+name: Build & Deploy UPS Toolkit
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build-and-push-ghcr:
+    name: Build and Push to GitHub Container Registry
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Log in to GHCR
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: Build Docker image
+        run: |
+          docker build -t ghcr.io/${{ github.repository }}:latest .
+
+      - name: Push to GHCR
+        run: |
+          docker push ghcr.io/${{ github.repository }}:latest
+
+  deploy-to-k8s:
+    name: Deploy to Kubernetes Cluster
+    runs-on: ubuntu-latest
+    needs: build-and-push-ghcr
+
+    steps:
+      - name: Set up kubectl
+        uses: azure/setup-kubectl@v3
+
+      - name: Authenticate with GCP
+        uses: google-github-actions/auth@v1
+        with:
+          credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
+
+      - name: Configure GKE cluster access
+        run: gcloud container clusters get-credentials my-cluster --zone my-zone --project my-project
+
+      - name: Apply deployment to Kubernetes
+        run: |
+          kubectl set image deployment/ups-toolkit ups-toolkit=ghcr.io/${{ github.repository }}:latest
+          kubectl rollout status deployment/ups-toolkit
