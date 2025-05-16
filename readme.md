@@ -33,38 +33,51 @@ chmod +x common/detect_usb_id.sh
 
 **Outcome**: UPS communication is automatically reset, preventing shutdown errors and improving uptime reliability.
 
+<<<<<<< HEAD
+=======
+## QNAP Optimization (Community Contribution)
 
-## 📁 Repository Structure
-```
+Special thanks to community contributor **Frank Templer (frank@templer.de)** for this extension:
+
+- `custom/dui_qnap_custom.sh`: Detects only CyberPower devices (Vendor-ID 0764) with logging
+- `custom/ups_reset_cron_qnap_cut7.sh`: Resets only the detected UPS, not all USB devices
+
+⚠ These scripts are **optional** but recommended for QNAP NAS with CyberPower UPS.
+
+### Logs
+- `/tmp/usb_detect.log` – Results from UPS detection
+- `/tmp/ups_reset_custom.log` – Actions taken by the UPS reset script
+
+📁 Repository Structure
+perl
+Kopieren
+Bearbeiten
 usb-ups-reset/
 ├── .github/
 │   ├── workflows/
-│   │   ├── ups-toolkit-ci.yml        
-│   │   └── deploy-ghcr-k8s.yml      
- Kubernetes
+│   │   ├── ups-toolkit-ci.yml
+│   │   └── deploy-ghcr-k8s.yml
+│   │   └── test-qnap-custom.yml
 │   ├── ISSUE_TEMPLATE.md
 │   ├── PULL_REQUEST_TEMPLATE.md
 │   └── CONTRIBUTING.md
 ├── README.md
+├── CHANGELOG.md
+├── VERSION
 ├── LICENSE
 ├── Dockerfile
 ├── docker-compose.yml
 ├── k8s/
 │   └── deployment.yaml
+├── docs/
+│   ├── qnap.md
+│   ├── synology.md
+│   └── usage.md
 ├── common/
 │   ├── detect_usb_id.sh
+│   ├── detect_usb_id_qnap.sh             
 │   ├── check_ups_nut.sh
 │   ├── check_ups_snmp.sh
-│   └── notify_slack.sh
-├── qnap/
-│   └── ups_reset_cron_qnap.sh
-├── synology/
-│   └── ups_reset_cron_synology.sh
-├── linux/
-│   └── ups_reset_cron_generic.sh
-├── crontab_examples/
-│   └── crontab_entry.md
-```
 
 ## 📦 Installation
 ```bash
@@ -162,6 +175,14 @@ This setup is now fully CI/CD-capable for Docker, Kubernetes, and enterprise sec
 ## 🧪 Testing
 - Test USB detection
 - Simulate reset conditions in Docker
+
+## Documentation
+
+Detailed setup guides for different platforms:
+
+- QNAP: See `docs/qnap.md` – Optimized scripts with USB detection and reset
+- Synology: See `docs/synology.md` – How to reset UPS USB via cron on DSM
+- General Linux & Slack Integration: See `docs/usage.md`
 
 ## 🛠️ GitHub Actions
 - See `.github/workflows/ups-toolkit-ci.yml ` for automated test runs on commits and PRs

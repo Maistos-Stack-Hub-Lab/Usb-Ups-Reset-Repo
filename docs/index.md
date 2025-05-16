@@ -2,7 +2,7 @@
 
 Welcome to the official documentation for the **CyberPower USB UPS Reset Toolkit**. This toolkit helps automate detection, reset, and monitoring of CyberPower UPS devices via USB on Linux-based systems, including QNAP, Synology, and Docker/Kubernetes environments.
 
-## 🚀 Features
+##  Features
 - Auto-detection of CyberPower USB UPS devices
 - USB reset scripting
 - Slack webhook integration for alerts
@@ -30,7 +30,7 @@ Welcome to the official documentation for the **CyberPower USB UPS Reset Toolkit
    */10 * * * * /path/to/common/detect_usb_id.sh >> /var/log/ups-check.log 2>&1
    ```
 
-## 🖥️ Windows Instructions
+##  Windows Instructions
 To run this on Windows:
 1. **Use WSL (Windows Subsystem for Linux):**
    - Install WSL: https://learn.microsoft.com/en-us/windows/wsl/install
@@ -44,7 +44,7 @@ To run this on Windows:
 3. **USB passthrough required:**
    Ensure your CyberPower UPS is connected and USB passthrough is enabled in WSL. Native USB device handling in WSL may be limited depending on version.
 
-## 🍏 macOS Instructions
+## macOS Instructions
 1. **Open Terminal**
 2. **Clone and run**:
    ```bash
@@ -57,13 +57,13 @@ To run this on Windows:
 3. **Check USB device**:
    Use `system_profiler SPUSBDataType` to confirm UPS presence on USB.
 
-## ☸️ Kubernetes Setup
+## Kubernetes Setup
 Deploy with the sample manifest:
 ```bash
 kubectl apply -f k8s/deployment.yaml
 ```
 
-## 📦 Docker Usage
+## Docker Usage
 ```bash
 docker-compose up --build -d
 ```
@@ -90,3 +90,4 @@ cyberpower ups usb monitoring linux automation docker kubernetes qnap synology d
 > This documentation is hosted via GitHub Pages.
 > For deployment instructions, visit **Settings > Pages** and select `main` > `/docs`.
 
+## Bei Fragen oder Verbesserungsvorschlägen gerne einen Pull Request oder Issue auf GitHub öffnen.
