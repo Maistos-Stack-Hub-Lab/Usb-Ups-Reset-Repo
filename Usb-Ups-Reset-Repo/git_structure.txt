@@ -1,0 +1,54 @@
+Folder PATH listing
+Volume serial number is 3305-78BD
+C:.
+³   CHANGELOG.md
+³   git_structure.txt
+³   License
+³   readme.md
+³   VERSION
+³   
+ÃÄÄÄ.github
+³   ³   CONTRIBUTING.md
+³   ³   ISSUE_TEMPLATE.md
+³   ³   PULL_REQUEST_TEMPLATE.md
+³   ³   
+³   ÀÄÄÄworkflows
+³           deploy-ghcr-k8s.yml
+³           test-qnap-custom.yml
+³           ups-toolkit-ci.yml
+³           
+ÃÄÄÄcommon
+³       Bash Logging to Syslog.sh
+³       check_ups_nut.sh
+³       check_ups_snmp.sh
+³       detect_usb_id.sh
+³       detect_usb_id_qnap.sh
+³       notify_slack.sh
+³       rsyslog.conf
+³       
+ÃÄÄÄcrontab_examples
+³       crontab_entry.md
+³       
+ÃÄÄÄcustom
+³       dui_qnap_custom.sh
+³       ups_reset_cron_qnap_cut7.sh
+³       
+ÃÄÄÄDocker
+³   ³   docker-compose.yml
+³   ³   Dockerfile
+³   ³   
+³   ÀÄÄÄk8s
+³           deployment.yaml
+³           
+ÃÄÄÄdocs
+³       index.md
+³       qnmap.md
+³       synology.md
+³       
+ÃÄÄÄqnap
+³       ups_reset_cron_qnap.sh
+³       ups_reset_cron_qnap_optimized.sh
+³       
+ÀÄÄÄsynology
+        ups_reset_cron_synology.sh
+        
