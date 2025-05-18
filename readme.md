@@ -47,6 +47,7 @@ Special thanks to community contributor **Frank Templer (frank@templer.de)** for
 - `/tmp/ups_reset_custom.log` – Actions taken by the UPS reset script
 
 ## 📁 Repository Structure
+```
 usb-ups-reset/
 ├── .github/
 │   ├── workflows/
@@ -73,7 +74,7 @@ usb-ups-reset/
 │   ├── detect_usb_id_qnap.sh             
 │   ├── check_ups_nut.sh
 │   ├── check_ups_snmp.sh
-
+```
 ## 📦 Installation
 ```bash
 git clone https://github.com/Maistos-Stack-Hub-Lab/Usb-Ups-Reset-Repo.git
