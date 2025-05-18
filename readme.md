@@ -47,9 +47,7 @@ Special thanks to community contributor **Frank Templer (frank@templer.de)** for
 - `/tmp/ups_reset_custom.log` – Actions taken by the UPS reset script
 
 📁 Repository Structure
-perl
-Kopieren
-Bearbeiten
+
 usb-ups-reset/
 ├── .github/
 │   ├── workflows/
