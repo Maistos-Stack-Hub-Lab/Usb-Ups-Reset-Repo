@@ -33,8 +33,6 @@ chmod +x common/detect_usb_id.sh
 
 **Outcome**: UPS communication is automatically reset, preventing shutdown errors and improving uptime reliability.
 
-<<<<<<< HEAD
-=======
 ## QNAP Optimization (Community Contribution)
 
 Special thanks to community contributor **Frank Templer (frank@templer.de)** for this extension:
