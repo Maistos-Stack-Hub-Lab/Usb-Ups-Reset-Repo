@@ -2,12 +2,12 @@
 
 Automatic USB reset and monitoring tools for CyberPower UPS devices when status issues occur, such as "Anomalous" or unrecognized battery mode. This project is designed for QNAP, Synology, and generic Linux systems and includes full support for cron jobs, SNMP, NUT, Slack notifications, syslog, and Docker-based development/testing environments.
 
-## 🌍 Supported Platforms
+##  Supported Platforms
 - QNAP NAS (BusyBox shell)
 - Synology NAS (DSM 6/7 with shell access)
 - Generic Linux distros (Debian, Ubuntu, etc.)
 
-## 🔧 What It Does
+##  What It Does
 - Detects CyberPower UPS devices connected via USB
 - Performs USB reset upon detecting fault conditions
 - Monitors UPS status using `upsc` (NUT) or `snmpget`
@@ -35,7 +35,7 @@ chmod +x common/detect_usb_id.sh
 
 ## QNAP Optimization (Community Contribution)
 
-Special thanks to community contributor **Frank Templer (frank@templer.de)** for this extension:
+Special thanks to community contributor **Frank cypow@frankberger.de** for this extension:
 
 - `custom/dui_qnap_custom.sh`: Detects only CyberPower devices (Vendor-ID 0764) with logging
 - `custom/ups_reset_cron_qnap_cut7.sh`: Resets only the detected UPS, not all USB devices
@@ -46,7 +46,7 @@ Special thanks to community contributor **Frank Templer (frank@templer.de)** for
 - `/tmp/usb_detect.log` – Results from UPS detection
 - `/tmp/ups_reset_custom.log` – Actions taken by the UPS reset script
 
-## 📁 Repository Structure
+## Repository Structure
 ```
 usb-ups-reset/
 ├── .github/
@@ -75,29 +75,29 @@ usb-ups-reset/
 │   ├── check_ups_nut.sh
 │   ├── check_ups_snmp.sh
 ```
-## 📦 Installation
+## Installation
 ```bash
 git clone https://github.com/Maistos-Stack-Hub-Lab/Usb-Ups-Reset-Repo.git
 cd Usb-Ups-Reset-Repo
 chmod +x */*.sh
 ```
 
-## 🔁 Cronjob Example
+## Cronjob Example
 Add to crontab (`crontab -e`):
 ```bash
 */10 * * * * /path/to/usb-ups-reset/qnap/ups_reset_cron_qnap.sh
 ```
 
-## ✅ Requirements
+## Requirements
 - BusyBox or bash shell
 - Write permission to log directory
 - Optional: `net-snmp`, `nut-client`, `jq`, `curl`
 
-## 📊 UPS Status Detection
+## UPS Status Detection
 - **NUT example:** `common/check_ups_nut.sh`
 - **SNMP example:** `common/check_ups_snmp.sh`
 
-## 📣 Slack Webhook Integration
+## Slack Webhook Integration
 - `common/notify_slack.sh` allows sending alerts to Slack.
 - Requires valid webhook URL and `jq` installed.
 
@@ -115,7 +115,7 @@ Run locally:
 docker-compose up --build -d
 ```
 
-## ☸️ Kubernetes Deployment (Example)
+## Kubernetes Deployment (Example)
 **To be created**: Save the following as `k8s/deployment.yaml`
 ```yaml
 apiVersion: apps/v1
@@ -149,7 +149,7 @@ Apply with:
 kubectl apply -f k8s/deployment.yaml
 ```
 
-## 🔐 Securing CI with Google Cloud Secret Manager
+## Securing CI with Google Cloud Secret Manager
 - Store your SSH keys or Slack webhooks securely
 - Use `google-github-actions/auth` + `gcloud secrets versions access`
 - Example step in workflow:
@@ -168,7 +168,7 @@ kubectl apply -f k8s/deployment.yaml
 
 This setup is now fully CI/CD-capable for Docker, Kubernetes, and enterprise secret management via Google Cloud!
 
-## 🧪 Testing
+## Testing
 - Test USB detection
 - Simulate reset conditions in Docker
 
@@ -180,14 +180,14 @@ Detailed setup guides for different platforms:
 - Synology: See `docs/synology.md` – How to reset UPS USB via cron on DSM
 - General Linux & Slack Integration: See `docs/usage.md`
 
-## 🛠️ GitHub Actions
+## GitHub Actions
 - See `.github/workflows/ups-toolkit-ci.yml ` for automated test runs on commits and PRs
 `.github/workflows/deploy-ghcr-k8s.yml` for  CI/CD deployment to GHCR and Kubernetes
 
 ## 🤝 Contributing
 Please read [`CONTRIBUTING.md`](.github/CONTRIBUTING.md) for how to help out!
 
-## 📝 License
+## License
 Licensed under the [MIT License](LICENSE)
 
 ---
