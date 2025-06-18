@@ -42,6 +42,32 @@ Special thanks to community contributor **Frank cypow@frankberger.de** for this 
 
 ⚠ These scripts are **optional** but recommended for QNAP NAS with CyberPower UPS.
 
+### Experimental Soft Reset for QNAP (v1.4.0-dev)
+
+If your QNAP NAS (e.g. TS-453A or TS-431P2) has issues after USB reset, try the softer method:
+
+```bash
+./custom/ups_reset_qnap_soft.sh
+```
+This script:
+
+only detaches and rebinds the specific CyberPower UPS from the USB driver
+
+tries to avoid full disconnects that confuse QNAP's GUI
+
+optionally restarts the UPS service on QNAP (if available)
+
+Logs are stored in:
+/tmp/ups_reset_soft.log
+
+### Git-Befehle zur Einbindung
+
+```bash
+git add custom/ups_reset_qnap_soft.sh readme.md
+git commit -m "Add soft reset variant for QNAP to improve compatibility"
+git push origin main
+```
+
 ### Logs
 - `/tmp/usb_detect.log` – Results from UPS detection
 - `/tmp/ups_reset_custom.log` – Actions taken by the UPS reset script
