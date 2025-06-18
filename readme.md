@@ -58,19 +58,35 @@ tries to avoid full disconnects that confuse QNAP's GUI
 optionally restarts the UPS service on QNAP (if available)
 
 Logs are stored in:
-/tmp/ups_reset_soft.log
+- `/tmp/ups_reset_soft.log`
 
-### Git-Befehle zur Einbindung
 
-```bash
-git add custom/ups_reset_qnap_soft.sh readme.md
-git commit -m "Add soft reset variant for QNAP to improve compatibility"
-git push origin main
+### Windows PowerShell Soft Reset
+
+### Windows PowerShell Soft Reset
+
+If you're testing CyberPower USB-UPS on a Windows system, you can use this soft reset script:
+
+```powershell
+.\custom\ups_reset_soft_windows.ps1
 ```
+This script:
+
+- detects CyberPower USB devices
+
+- issues a soft driver reset via `Disable-PnpDevice/Enable-PnpDevice`
+
+- logs actions to `%TEMP%\ups_reset_soft.log`
 
 ### Logs
 - `/tmp/usb_detect.log` – Results from UPS detection
 - `/tmp/ups_reset_custom.log` – Actions taken by the UPS reset script
+
+### Voraussetzung:
+
+- PowerShell mit Admin-Rechten
+- Modul: `PNPUtil` bzw. `Get-PnpDevice` verfügbar ab Windows 10+
+- ⚠ Requires PowerShell (admin) and Windows 10 or later
 
 ## Repository Structure
 ```
